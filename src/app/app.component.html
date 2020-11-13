@@ -1,0 +1,30 @@
+<!-- Toolbar -->
+<div class="toolbar" role="banner">
+  <img
+    width="40"
+    alt="Angular Logo"
+    src="assets/icons/48.png"
+  />
+  <span>Base64 Display</span>
+</div>
+
+<div class="content main">
+
+  <!-- Highlight Card -->
+
+  <!-- Next Steps -->
+  <h2>Decode base64</h2>
+  <p>string from 'YmFzZTY0IGRlY29kZXI=' to 'base64 decoder'</p>
+  <div class="card no-padding">
+    <textarea #imageStr (click)="setSelectionRange(imageStr)" class="textarea" [(ngModel)]="baseString"></textarea>
+  </div>
+
+  <!-- Resources -->
+  <h3>Show Image</h3>
+  <div class="card-container">
+    <div class="card result-image">
+      <img [src]="decode()" />
+    </div>
+  </div>
+
+</div>
