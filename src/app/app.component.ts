@@ -19,7 +19,8 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {}
 
   decode(): string {
-    return `data:image/png;base64,${this.baseString}`;
+    const data = this.baseString.replace(/^\"|\"$|^\'|\'$/g, '');
+    return `data:image/png;base64,${data}`;
   }
 
   setSelectionRange(input: HTMLTextAreaElement) {

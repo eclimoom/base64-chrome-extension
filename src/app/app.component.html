@@ -14,7 +14,10 @@
 
   <!-- Next Steps -->
   <h2>Decode base64</h2>
-  <p>string from 'YmFzZTY0IGRlY29kZXI=' to 'base64 decoder'</p>
+  <p>
+    string from 'YmFzZTY0IGRlY29kZXI=' to 'base64 decoder'<br>
+    string from '"YmFzZTY0IGRlY29kZXI="' to 'base64 decoder'
+  </p>
   <div class="card no-padding">
     <textarea #imageStr (click)="setSelectionRange(imageStr)" class="textarea" [(ngModel)]="baseString"></textarea>
   </div>
