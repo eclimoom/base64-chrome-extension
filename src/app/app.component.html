@@ -26,7 +26,7 @@
   <h3>Show Image</h3>
   <div class="card-container">
     <div class="card result-image">
-      <img [src]="decode()" />
+      <img [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
     </div>
   </div>
 
