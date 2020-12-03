@@ -46,6 +46,7 @@ export class AppComponent implements AfterViewInit {
   getBase64List() {
     return JSON.parse(localStorage.getItem(STORAGE_BASE_NAME) || '[]');
   }
+
   setBase64List(base64) {
     let list = this.getBase64List();
     if (list.find((item) => item.base64 === base64)) {
