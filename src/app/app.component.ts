@@ -23,7 +23,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setSelectionRange()
+    this.setSelectionRange();
   }
 
   decode(): string {
@@ -32,15 +32,16 @@ export class AppComponent implements AfterViewInit {
   }
 
   setSelectionRange() {
-    let input = document.querySelector("textarea");
+    let input = document.querySelector('textarea');
     if (input.setSelectionRange) {
-      navigator.clipboard.readText()
-        .then(text => {
-          if(text){
+      window.navigator.clipboard
+        .readText()
+        .then((text) => {
+          if (text) {
             this.baseString = text;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.error('Failed to read clipboard contents: ', err);
         });
       input.setSelectionRange(0, this.baseString.length);
