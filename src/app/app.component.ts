@@ -22,15 +22,27 @@ export class AppComponent implements AfterViewInit {
         : INIT_BASE64_STRING;
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.setSelectionRange()
+  }
 
   decode(): string {
     const data = this.baseString.replace(/^\"|\"$|^\'|\'$/g, '').trim();
     return `data:image/png;base64,${data}`;
   }
 
-  setSelectionRange(input: HTMLTextAreaElement) {
+  setSelectionRange() {
+    let input = document.querySelector("textarea");
     if (input.setSelectionRange) {
+      navigator.clipboard.readText()
+        .then(text => {
+          if(text){
+            this.baseString = text;
+          }
+        })
+        .catch(err => {
+          console.error('Failed to read clipboard contents: ', err);
+        });
       input.setSelectionRange(0, this.baseString.length);
     }
   }
