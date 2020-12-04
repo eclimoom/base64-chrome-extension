@@ -16,14 +16,13 @@ export class AppComponent implements AfterViewInit {
 
   constructor() {
     this.list = this.getBase64List();
-    this.baseString =
-      this.list[0] && this.list[0].base64
-        ? this.list[0].base64
-        : INIT_BASE64_STRING;
+    this.initData();
   }
 
   ngAfterViewInit(): void {
-    this.setSelectionRange();
+    setTimeout(() => {
+      this.setSelectionRange();
+    }, 0);
   }
 
   decode(): string {
@@ -33,19 +32,8 @@ export class AppComponent implements AfterViewInit {
 
   setSelectionRange() {
     let input = document.querySelector('textarea');
-    if (input.setSelectionRange) {
-      window.navigator.clipboard
-        .readText()
-        .then((text) => {
-          if (text) {
-            this.baseString = text;
-          }
-        })
-        .catch((err) => {
-          console.error('Failed to read clipboard contents: ', err);
-        });
-      input.setSelectionRange(0, this.baseString.length);
-    }
+    input.select();
+    document.execCommand && document.execCommand('paste');
   }
 
   onImageLoad() {
@@ -68,5 +56,12 @@ export class AppComponent implements AfterViewInit {
     list.unshift({ base64, date: new Date() });
     list.length > 5 && (list.length = 5);
     localStorage.setItem(STORAGE_BASE_NAME, JSON.stringify(list));
+  }
+
+  initData() {
+    this.baseString =
+      this.list[0] && this.list[0].base64
+        ? this.list[0].base64
+        : INIT_BASE64_STRING;
   }
 }

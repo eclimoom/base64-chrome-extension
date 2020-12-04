@@ -13,13 +13,22 @@
   <!-- Highlight Card -->
 
   <!-- Next Steps -->
-  <h2>Decode base64</h2>
-  <p>
+  <h2>Decode base64
+    <p class="desc">
     string from 'YmFzZTY0IGRlY29kZXI=' to 'base64 decoder'<br>
     string from '"YmFzZTY0IGRlY29kZXI="' to 'base64 decoder'
   </p>
+    <button class="cta" (click)="initData()">
+      <span>示例</span>
+      <svg width="13px" height="10px" viewBox="0 0 13 10">
+        <path d="M1,5 L11,5"></path>
+        <polyline points="8 1 12 5 8 9"></polyline>
+      </svg>
+    </button>
+  </h2>
+
   <div class="card no-padding">
-    <textarea #imageStr class="textarea" [(ngModel)]="baseString"></textarea>
+    <textarea autofocus #imageStr class="textarea" [(ngModel)]="baseString"></textarea>
   </div>
 
   <!-- Resources -->
