@@ -5,7 +5,7 @@
     alt="Angular Logo"
     src="assets/icons/48.png"
   />
-  <span>Base64 Display</span>
+  <span>Base64 PNG Display</span>
 </div>
 
 <div class="content main">
@@ -13,29 +13,48 @@
   <!-- Highlight Card -->
 
   <!-- Next Steps -->
-  <h2>Decode base64
-    <p class="desc">
-    string from 'YmFzZTY0IGRlY29kZXI=' to 'base64 decoder'<br>
-    string from '"YmFzZTY0IGRlY29kZXI="' to 'base64 decoder'
-  </p>
-    <button class="cta" (click)="initData()">
-      <span>示例</span>
-      <svg width="13px" height="10px" viewBox="0 0 13 10">
-        <path d="M1,5 L11,5"></path>
-        <polyline points="8 1 12 5 8 9"></polyline>
-      </svg>
-    </button>
+  <h2 class="d-flex title">
+    <span>Decode Base64 PNG</span>
+    <div class="flex-fill"></div>
+    <label for="background" class="label">背景:</label>
+    <select
+      name="background"
+      id="background"
+      class="form-control mr-8"
+      [(ngModel)]="pngConfig.background">
+      <option *ngFor="let bg of pngConfig.backgrounds" [value]="bg.color">{{ bg.label }}</option>
+    </select>
+
+    <div class="img-type">
+      <label class="custom-control-label" *ngFor="let item of imgTypes">
+        <input
+               type="radio"
+               class="custom-control-input"
+               name="options"
+               [(ngModel)]="pngConfig.imgType"
+               [value]="item.type">
+        {{item.name}}
+      </label>
+    </div>
+
+<!--    <button class="cta" (click)="initData()">-->
+<!--      <span>示例</span>-->
+<!--      <svg width="13px" height="10px" viewBox="0 0 13 10">-->
+<!--        <path d="M1,5 L11,5"></path>-->
+<!--        <polyline points="8 1 12 5 8 9"></polyline>-->
+<!--      </svg>-->
+<!--    </button>-->
   </h2>
 
   <div class="card no-padding">
-    <textarea autofocus #imageStr class="textarea" [(ngModel)]="baseString"></textarea>
+    <textarea autofocus #imageStr class="textarea" [(ngModel)]="pngConfig.baseString" (keyup)="pngVal()"></textarea>
   </div>
 
   <!-- Resources -->
   <h3>Show Image</h3>
   <div class="card-container">
-    <div class="card result-image">
-      <img [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
+    <div class="card result-image" [ngStyle]="{'background': pngConfig.background}">
+      <img *ngIf="baseString" [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
     </div>
   </div>
 

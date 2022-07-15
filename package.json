@@ -23,7 +23,8 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "upng-js": "^2.1.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "local-png-js": "file:./local_dependencies/pngjs"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1001.2",

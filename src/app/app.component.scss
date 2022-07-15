@@ -70,17 +70,22 @@ p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 600px;
+  width: 100%;
+  min-width: 600px;
   height: 800px;
   margin-bottom: 16px;
 }
 
-.no-padding{padding: 0 !important;}
+.no-padding {
+  padding: 0 !important;
+}
+
 .card {
   border-radius: 4px;
   border: 1px solid #eee;
   background-color: #fafafa;
-  width: 600px;
+  width: 100%;
+  min-width: 600px;
   margin: 8px 0;
   padding: 16px;
   display: flex;
@@ -106,15 +111,19 @@ p {
   fill: rgb(105, 103, 103);
 }
 
-.result-image{
+.result-image {
   height: 512px;
   padding: 0;
-  img{
+
+  img {
     width: auto;
+    max-width: 100%;
+    max-height: 100%;
   }
 }
-h2{
-  .desc{
+
+h2 {
+  .desc {
     margin: 0;
     font-size: 12px;
     display: inline-block;
@@ -133,6 +142,7 @@ h2{
     border-radius: 15px;
     outline: none;
     overflow: hidden;
+
     &:before {
       content: "";
       position: absolute;
@@ -145,12 +155,14 @@ h2{
       height: 30px;
       transition: all 0.3s ease;
     }
+
     span {
       position: relative;
       line-height: 18px;
       font-weight: 300;
       vertical-align: middle;
     }
+
     svg {
       position: relative;
       top: 0;
@@ -163,13 +175,16 @@ h2{
       transform: translateX(-5px);
       transition: all 0.3s ease;
     }
-    &:hover{
+
+    &:hover {
       svg {
         transform: translateX(0);
       }
+
       &:active {
         transform: scale(0.96);
       }
+
       &:before {
         left: 0;
         width: 100%;
@@ -178,8 +193,9 @@ h2{
     }
   }
 }
+
 $text-height: 50px;
-.textarea{
+.textarea {
   width: 100%;
   height: $text-height;
   padding: .375rem .7rem;
@@ -189,9 +205,10 @@ $text-height: 50px;
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-.clouds{
+
+.clouds {
   position: absolute;
   top: 80px;
   left: 0;
@@ -199,4 +216,50 @@ $text-height: 50px;
   z-index: 0;
   opacity: .5;
   pointer-events: none;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-fill {
+  flex: 1 1 auto !important;
+}
+
+.mr-auto {
+  margin-right: auto !important;
+}
+
+.ml-auto {
+  margin-left: auto !important;
+}
+
+.title {
+  width: 100%;
+  align-items: center;
+
+  .label {
+    font-size: 14px;
+  }
+}
+
+.form-control {
+  display: inline-block;
+  padding: 0.3rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  text-transform: none;
+}
+
+.mr-4{
+  margin-right: 4px;
+}
+.mr-8{
+  margin-right: 8px;
 }
