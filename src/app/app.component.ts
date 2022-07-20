@@ -68,7 +68,7 @@ export class AppComponent implements AfterViewInit {
       try {
         array = this._base64ToUint8Array(this.baseString);
       } catch (e) {
-        console.error("decode base64 error, ", e);
+        console.log("decode base64 error, ", e);
         return;
       }
 
@@ -81,7 +81,7 @@ export class AppComponent implements AfterViewInit {
         try {
           png = PNG.newPng(array);
         } catch (e) {
-          console.error("decode png error, ", e);
+          console.log("decode png error, ", e);
           return;
         }
         width = png.width;
@@ -220,6 +220,10 @@ export class AppComponent implements AfterViewInit {
     let input = document.querySelector('textarea');
     input.select();
     document.execCommand && document.execCommand('paste');
+
+    setTimeout(() => {
+      this.pngVal();
+    }, 10);
   }
 
   onImageLoad() {
