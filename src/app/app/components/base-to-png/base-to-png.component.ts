@@ -11,6 +11,8 @@ const DEMO_STR = 'iVBORw0KGgoAAAANSUhEUgAAANIAAAAzCAYAAADigVZlAAAQN0lEQVR4nO2dCX
 })
 export class BaseToPngComponent implements AfterViewInit {
 
+  urlPath: any = 'https://srv.carbonads.net/static/30242/15f7619952d3cdf0e1f51f9262d4afe75069da8a';
+
   pngConfig = {
     baseString: '',
     imgType: '',  // 图像类型
@@ -23,7 +25,7 @@ export class BaseToPngComponent implements AfterViewInit {
   };
   imgTypes = [
     {type: 'string', name: '字符串'},
-    {type: 'file', name: '文件上传'}
+    {type: 'url', name: 'url'}
   ];
 
   baseString: string;
@@ -52,6 +54,7 @@ export class BaseToPngComponent implements AfterViewInit {
     this.baseString = str.trim().replace(/^"|"$|^'|'$/g, '').replace('data: ', '').trim();
     this.decode();
   }
+
 
   decode(): string {
     if (!this.baseString) {
@@ -123,23 +126,23 @@ export class BaseToPngComponent implements AfterViewInit {
     return data;
   }
 
-  getPixelValues(pixelData): any {
-    let minPixelValue = Number.MAX_VALUE;
-    let maxPixelValue = Number.MIN_VALUE;
-    const len = pixelData.length;
-    let pixel = void 0;
-
-    for (let i = 0; i < len; i++) {
-      pixel = pixelData[i];
-      minPixelValue = minPixelValue < pixel ? minPixelValue : pixel;
-      maxPixelValue = maxPixelValue > pixel ? maxPixelValue : pixel;
-    }
-
-    return {
-      minPixelValue,
-      maxPixelValue
-    };
-  }
+  // getPixelValues(pixelData): any {
+  //   let minPixelValue = Number.MAX_VALUE;
+  //   let maxPixelValue = Number.MIN_VALUE;
+  //   const len = pixelData.length;
+  //   let pixel = void 0;
+  //
+  //   for (let i = 0; i < len; i++) {
+  //     pixel = pixelData[i];
+  //     minPixelValue = minPixelValue < pixel ? minPixelValue : pixel;
+  //     maxPixelValue = maxPixelValue > pixel ? maxPixelValue : pixel;
+  //   }
+  //
+  //   return {
+  //     minPixelValue,
+  //     maxPixelValue
+  //   };
+  // }
 
   // str2ab(str) {
   //   const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
@@ -232,6 +235,54 @@ export class BaseToPngComponent implements AfterViewInit {
       this.renderFile(file);
     }
   }
+
+
+  async urlVal(): any {
+    const url = this.urlPath;
+    if (!url) {
+      return;
+    }
+    // load url
+    const img = new Image();
+    // img.setAttribute('crossOrigin', 'anonymous');
+    img.src = url;
+
+    img.onload = (e: any) => {
+      // console.log('e', img);
+      // const canvas = new OffscreenCanvas(img.width, img.height);
+      // const ctx = canvas.getContext('2d');
+      // ctx.drawImage(img, 0, 0);
+      // canvas.convertToBlob().then((blob) => {
+      //   console.log('blob', blob);
+      // });
+      // const base64 = canvas.toDataURL();
+
+      // fetch(url).then(res => res.arrayBuffer()).then(arrayBuffer => {
+      //   const base64 = arrayBuffer.toString();
+      //   console.log(base64);
+      // });
+
+      // const canvas = document.createElement('canvas');
+      // const ctx = canvas.getContext('2d');
+      // canvas.width = img.width;
+      // canvas.height = img.height;
+      // ctx.drawImage(img, 0, 0);
+      // canvas.toBlob((blob: any) => {
+      //   console.log('blob', blob);
+      // });
+
+      // 3
+      createImageBitmap(img).then(bmp => {
+        // transfer it to your worker
+
+        console.log(bmp, 'img');
+      });
+    };
+
+    // const blob = await fetch(url).then(r => r.blob());
+    // const img2 = await createImageBitmap(blob);
+  }
+
 
   private renderFile(file: File): void {
     const reader = new FileReader();

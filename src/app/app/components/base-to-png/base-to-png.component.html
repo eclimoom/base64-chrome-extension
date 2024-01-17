@@ -24,8 +24,13 @@
   </div>
 </h2>
 
-<div class="card no-padding" [ngClass]="{'dragTip': !this.pngConfig.baseString}" (drop)="handleDrop($event)">
+<div *ngIf="pngConfig.imgType === 'string'" class="card no-padding" [ngClass]="{'dragTip': !this.pngConfig.baseString}" (drop)="handleDrop($event)">
   <textarea autofocus class="textarea" [(ngModel)]="pngConfig.baseString" (keyup)="pngVal()"></textarea>
+</div>
+<div *ngIf="pngConfig.imgType === 'url'" class="card no-padding">
+  <input class="textarea"
+         placeholder="请填入url"
+         type="text" [(ngModel)]="urlPath" (keyup)="urlVal()">
 </div>
 
 <!-- Resources -->
