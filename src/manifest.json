@@ -13,6 +13,16 @@
     "128": "assets/icons/128.png"
   },
   "permissions": [
-    "clipboardRead"
-  ]
+    "clipboardRead",
+    "declarativeNetRequest"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "assets/rules.json"
+      }
+    ]
+  }
 }

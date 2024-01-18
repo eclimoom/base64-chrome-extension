@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2,
+    "priority": 1,
+    "action": { "type": "allowAllRequests" },
+    "condition": {
+      "urlFilter": "https://cors-anywhere.herokuapp.com/",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+]

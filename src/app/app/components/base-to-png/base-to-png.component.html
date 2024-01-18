@@ -17,6 +17,7 @@
         type="radio"
         class="custom-control-input"
         name="options"
+        (change)="handleTypeChange()"
         [(ngModel)]="pngConfig.imgType"
         [value]="item.type">
       <span class="label-name">{{item.name}}</span>
