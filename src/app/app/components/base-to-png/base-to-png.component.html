@@ -30,7 +30,7 @@
 </div>
 <div *ngIf="pngConfig.imgType === 'url'" class="card no-padding">
   <input class="textarea"
-         placeholder="请填入url"
+         placeholder="请输入url,然后点击回车"
          type="text" [(ngModel)]="urlPath" (keyup)="urlVal()">
 </div>
 
@@ -39,5 +39,6 @@
 <div class="card-container">
   <div class="card result-image" [ngStyle]="{'background': pngConfig.background}">
     <img *ngIf="baseString" [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
+    <span class="loading" *ngIf="loading">Image is loading, please wait...</span>
   </div>
 </div>

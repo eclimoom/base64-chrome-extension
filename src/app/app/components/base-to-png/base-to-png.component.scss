@@ -23,7 +23,7 @@
   position: relative;
   &:after{
     position: absolute;
-    content: "拖拽文件或图片到此处";
+    content: "拖拽base64文件或图片文件到此处";
     top: 30%;
     left: 0;
     width: 100%;

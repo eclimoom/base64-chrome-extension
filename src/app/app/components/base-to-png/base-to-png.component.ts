@@ -13,6 +13,7 @@ const DEMO_PATH = 'https://srv.carbonads.net/static/30242/15f7619952d3cdf0e1f51f
 export class BaseToPngComponent implements AfterViewInit {
 
   urlPath: any = '';
+  loading = false;
 
   pngConfig = {
     baseString: '',
@@ -244,8 +245,10 @@ export class BaseToPngComponent implements AfterViewInit {
 
 
   urlVal(): void {
+    this.loading = true;
     const url = this.urlPath;
     if (!url) {
+      this.loading = false;
       return;
     }
 
@@ -262,6 +265,7 @@ export class BaseToPngComponent implements AfterViewInit {
           // 获取 base64 编码
           const base64data: any = reader.result;
           this.pngConfig.baseString = base64data;
+          this.loading = false;
           this.pngVal();
 
           // 可以在这里将 base64 数据用于你的需求，比如显示在页面上或发送到服务器
@@ -334,7 +338,10 @@ export class BaseToPngComponent implements AfterViewInit {
   }
 
   handleTypeChange(): void {
-    console.log(this.pngConfig.imgType);
-    this.baseString = '';
+    if (this.pngConfig.imgType === 'url') {
+      this.baseString = '';
+    } else {
+      this.urlPath = '';
+    }
   }
 }

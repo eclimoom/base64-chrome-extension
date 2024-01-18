@@ -6,6 +6,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 html, body {
   margin: 0;
 }
@@ -53,7 +54,6 @@ p {
 .toolbar #twitter-logo:hover {
   opacity: 0.8;
 }
-
 
 
 .card svg.material-icons path {
@@ -109,6 +109,11 @@ p {
 .result-image {
   height: 512px;
   padding: 0;
+
+  .loading {
+    color: rgb(136, 167, 197);
+    font-size: 16px;
+  }
 
   img {
     width: auto;
@@ -201,6 +206,11 @@ $text-height: 50px;
   border: 1px solid #ced4da;
   border-radius: .25rem;
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+  &::placeholder {
+    color: rgb(136, 167, 197);
+    font-size: 16px;
+  }
 }
 
 .btn {
@@ -247,7 +257,6 @@ $text-height: 50px;
 .ml-auto {
   margin-left: auto !important;
 }
-
 
 
 .form-control {
