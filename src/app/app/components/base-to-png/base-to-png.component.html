@@ -23,6 +23,7 @@
       <span class="label-name">{{item.name}}</span>
     </label>
   </div>
+  <button *ngIf="pngConfig.imgType=== 'url'" (click)="loadData()">load</button>
 </h2>
 
 <div *ngIf="pngConfig.imgType === 'string'" class="card no-padding" [ngClass]="{'dragTip': !this.pngConfig.baseString}" (drop)="handleDrop($event)">
@@ -37,8 +38,10 @@
 <!-- Resources -->
 <h3>Show Image</h3>
 <div class="card-container">
-  <div class="card result-image" [ngStyle]="{'background': pngConfig.background}">
-    <img *ngIf="baseString" [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
+  <div class="card result-image" [ngStyle]="{'background': pngConfig.background, display: 'none'}">
+    <img alt="static" *ngIf="baseString" [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
     <span class="loading" *ngIf="loading">Image is loading, please wait...</span>
   </div>
+  <div id="dicomImage" class="card result-image" [ngStyle]="{'background': pngConfig.background, display: 'block'}"
+  ></div>
 </div>

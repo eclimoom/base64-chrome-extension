@@ -2,10 +2,9 @@
 .content {
   position: relative;
   display: flex;
-  margin: 0 auto;
+  margin: 10px auto 0;
   flex-direction: column;
   align-items: self-start;
-  padding-top: 80px;
   width: 620px;
-  height: calc(100vh - 90px);
+  height: 600px;
 }
