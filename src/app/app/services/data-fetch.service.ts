@@ -5,24 +5,18 @@ import { PNG } from 'biomind-png-js';
 import * as cornerstone from 'cornerstone-core';
 import * as pako from 'pako';
 import * as fzstd from 'fzstd';
-
-console.log('pako', pako);
+// @ts-ignore
+import * as jpeg from 'jpeg-lossless-decoder-js';
+import { Decoder } from '../../../jpeg_decoder/decoder';
+import { getJpegInfo } from '../../../jpeg_decoder/get_jpeg_info';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataFetchService {
-  private readonly defaultUrl =
-    'http://192.168.6.35/predicts/1.2.156.600734.762202257.139620.1730459902.8499.5400253/biomind/98117e9d-a22b-11ef-a3bc-1b7ba874f173/mask/404754_13.png';
-  private readonly defaultToken =
-    'Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTczNDkzNTU1MSwiZXhwIjoxNzM1MDIxOTUxfQ.eyJ1c2VybmFtZSI6ImhlanVuamkifQ.v2201EENmdEQLRoUKvqXF7cyJx4XQZLH3tE50M9dBg1xTz03ysqP9gMrz4R9oFHhysk98Q3uVi6ozmP-HGD65A';
-
   constructor() {}
 
-  getFetchData(
-    url: string = this.defaultUrl,
-    token: string = this.defaultToken
-  ): Observable<any> {
+  getFetchData(url: string, token: string): Observable<any> {
     const headers: any = {
       Authorization: token,
       'Content-Type': 'arrayBuffer',
@@ -31,21 +25,17 @@ export class DataFetchService {
   }
 
   // 根绝文件流的判断文件格式
-  getFileType(data: any, endData: any): { type: string; isImg: boolean } {
+  getFileType(data: any): { type: string; isImg: boolean } {
+    console.log('getFileType>> data  >>', data);
     const buffer = new Uint8Array(data);
-    // console.log('buffer', buffer);
+    console.log('getFileType>> buffer>>', buffer);
     let type = 'unknown';
     // 图片格式
     let isImg = false;
     if (buffer[0] === 0xff && buffer[1] === 0xd8) {
       type = 'jpeg';
       isImg = true;
-    } else if (
-      buffer[0] === 0x89 &&
-      buffer[1] === 0x50 &&
-      buffer[2] === 0x4e &&
-      buffer[3] === 0x47
-    ) {
+    } else if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) {
       type = 'png';
       isImg = true;
       // const end = new Uint8Array(endData);
@@ -53,20 +43,9 @@ export class DataFetchService {
       // if (buffer[4] === 0x0D && buffer[5] === 0x0A && buffer[6] === 0x1A && buffer[7] === 0x0A && buffer[8] === 0x1A ) {
       //   type = 'dicom_png';
       // } else
-      if (
-        buffer[18] === 0x02 &&
-        buffer[19] === 0x00 &&
-        buffer[22] === 0x02 &&
-        buffer[23] === 0x00
-      ) {
+      if (buffer[18] === 0x02 && buffer[19] === 0x00 && buffer[22] === 0x02 && buffer[23] === 0x00) {
         type = 'dicom_png';
-        if (
-          buffer[24] === 0x01 &&
-          buffer[29] === 0xdc &&
-          buffer[30] === 0x03 &&
-          buffer[31] === 0xe9 &&
-          buffer[32] === 0x57
-        ) {
+        if (buffer[24] === 0x01 && buffer[29] === 0xdc && buffer[30] === 0x03 && buffer[31] === 0xe9 && buffer[32] === 0x57) {
           type = '1png';
         }
       }
@@ -94,17 +73,27 @@ export class DataFetchService {
     return { type, isImg };
   }
 
-  decodeImage(view: Uint8Array, type: string): any {
+  async decodeImage(view: Uint8Array, type: string, base64: string = ''): Promise<any> {
     let image: any;
-    if (['dicom_png', '1png', 'png'].includes(type)) {
-      const png = new PNG(view);
-      const pngPixelData = png.decodePixels();
+    if (['dicom_png', '1png', 'png', 'jpeg'].includes(type)) {
+      let png: any;
+      let pngPixelData: any;
+      if ('jpeg' === type) {
+        try {
+          png = await getJpegInfo(`data:image/jpeg;base64,${base64}`);
+          pngPixelData = png.decodePixels();
+        } catch (e) {
+          console.error('jpeg decode error', e);
+        }
+      } else {
+        png = new PNG(view);
+        pngPixelData = png.decodePixels();
+      }
       let pixelData: any;
       if (type === 'dicom_png') {
         const pixelDataOriginal = new Int16Array(png.width * png.height);
         for (let i = 0; i < png.width * png.height; i++) {
-          pixelDataOriginal[i] =
-            pngPixelData[2 * i] * 256 + pngPixelData[2 * i + 1];
+          pixelDataOriginal[i] = pngPixelData[2 * i] * 256 + pngPixelData[2 * i + 1];
         }
         pixelData = new Int16Array(pixelDataOriginal.buffer);
         const wcDefault = 350;
@@ -135,20 +124,18 @@ export class DataFetchService {
           sizeInBytes: width * height * 2,
         };
       } else {
-        const area = png.width * png.height;
         const color = [255, 255, 0];
         let whiteBoard: any;
         if (type === '1png') {
-          whiteBoard = this.transform8Uint(
-            pngPixelData,
-            png.width,
-            png.height,
-            color
-          );
+          whiteBoard = this.transform8Uint(pngPixelData, png.width, png.height, color);
         } else {
           whiteBoard = pngPixelData;
         }
-        pixelData = new Uint16Array(whiteBoard);
+        if (type === 'jpeg') {
+          pixelData = pngPixelData;
+        } else {
+          pixelData = new Uint16Array(whiteBoard);
+        }
 
         image = {
           imageId: type + new Date().getTime().toString().slice(-5),
@@ -168,7 +155,7 @@ export class DataFetchService {
           columnPixelSpacing: 1.0,
           rowPixelSpacing: 1.0,
           invert: false,
-          sizeInBytes: area * 4,
+          sizeInBytes: pixelData.length,
         };
       }
     } else if (type === 'bm') {
@@ -179,12 +166,7 @@ export class DataFetchService {
     return image;
   }
 
-  transform8Uint(
-    oneBytePixels: any,
-    width: number,
-    height: number,
-    colorDisease: any
-  ): any {
+  transform8Uint(oneBytePixels: any, width: number, height: number, colorDisease: any): any {
     const pixelDataOriginal = new Uint8Array(width * height * 4);
     const b = [1, 2, 4, 8, 16, 32, 64, 128];
     const redu = width % 8;
@@ -217,9 +199,7 @@ export class DataFetchService {
   }
 
   decodeBmHead(headBuffer: Uint8Array): any {
-    let list = [
-      String.fromCharCode.apply(null, new Uint8Array(headBuffer.slice(0, 4))),
-    ];
+    let list = [String.fromCharCode.apply(null, new Uint8Array(headBuffer.slice(0, 4)))];
     list = list.concat(...new Uint32Array(headBuffer.buffer.slice(4, 36)));
     list = list.concat(...new Float32Array(headBuffer.buffer.slice(36, 60)));
 
@@ -259,7 +239,6 @@ export class DataFetchService {
         * {summary}{Graylevel, unsigned 64bpp image.}
         * {description}{The image is graylevel. Each pixel is unsigned and stored in 8 bytes.}
         PixelFormat_Grayscale64 = 10
-    };
      */
 
     // ['BM', 800, 600, 4800, 3, 16, 0, 9, 0, 0, 1, 0, 0.3966499865055084, 0.3966499865055084]
@@ -323,7 +302,7 @@ export class DataFetchService {
       pixelArray = pako.inflate(buffer);
     }
 
-    let pixelBufferFormat: string;
+    // let pixelBufferFormat: string;
     let isColor = false;
 
     if (format === 1) {
@@ -402,10 +381,7 @@ export class DataFetchService {
     };
   }
 
-  private convertPixel(
-    targetPixel: Uint8Array | Int8Array,
-    pixelArray: Uint8Array
-  ): Uint8Array | Int8Array {
+  private convertPixel(targetPixel: Uint8Array | Int8Array, pixelArray: Uint8Array): Uint8Array | Int8Array {
     let index = 0;
     for (let i = 0; i < pixelArray.length; i += 3) {
       targetPixel[index++] = pixelArray[i];
@@ -416,9 +392,7 @@ export class DataFetchService {
     return targetPixel;
   }
 
-  private getPixelValues(
-    pixelArray: Uint8Array | Int16Array | Uint16Array
-  ): { minPixelValue: number; maxPixelValue: number } {
+  private getPixelValues(pixelArray: Uint8Array | Int16Array | Uint16Array): { minPixelValue: number; maxPixelValue: number } {
     let minPixelValue = Number.MAX_VALUE;
     let maxPixelValue = Number.MIN_VALUE;
     const len = pixelArray.length;
@@ -429,4 +403,85 @@ export class DataFetchService {
     }
     return { minPixelValue, maxPixelValue };
   }
+
+  // base64转arrayBuffer
+  base64ToArrayBuffer(base64: string): Uint8Array {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  // 3d裸数据模式
+  decode3dData(uint8Array: Uint8Array): any {
+    let img: any;
+    const defaultSize = 512;
+    const width = defaultSize;
+    const height = defaultSize;
+    const pixelSpacing = { col: 0, row: 0 };
+    const pixelData = new Int16Array(uint8Array.buffer);
+    const windowCenter = 350;
+    const windowWidth = 1000;
+    const { minPixelValue, maxPixelValue } = this.getPixelValues(pixelData);
+    img = {
+      imageId: '3d_' + new Date().getTime().toString().slice(-5),
+      minPixelValue,
+      maxPixelValue,
+      slope: 1.0,
+      intercept: 0.0,
+      windowCenter,
+      windowWidth,
+      render: cornerstone.renderGrayscaleImage,
+      getPixelData: () => pixelData,
+      rows: height,
+      columns: width,
+      height,
+      width,
+      color: false,
+      columnPixelSpacing: pixelSpacing.col,
+      rowPixelSpacing: pixelSpacing.row,
+      invert: false,
+      rotation: 0,
+      hflip: false,
+      vflip: false,
+      // planeType: vaItem.plane_type,
+      // sliceIndex: vaItem.slice_index,
+      // timesIndex: vaItem.times_index,
+      // sectionPos: vaItem.section_pos,
+      // sectionRange: vaItem.section_range,
+      // zoomCoord: vaItem.zoom_coord,
+      // centerlineCoord: vaItem.centerline_coord,
+      // controlPts: vaItem.control_pts,
+      // stenosisPos: vaItem.stenosis_pos,
+      // crosshair: vaItem.crosshair,
+      // sectionLineCoord: vaItem.section_line_coord,
+      // segmentSection: vaItem.segment_section,
+      // plaquePos: vaItem.plaque_pos,
+    };
+
+    return img;
+  }
+
+  // str2ab(str) {
+  //   const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+  //   const bufView = new Array(buf);
+  //   for (let i = 0, strLen = str.length; i < strLen; i++) {
+  //     bufView[i] = str.charCodeAt(i);
+  //   }
+  //   return bufView;
+  // }
+  //
+  // buffer2Base64(int16) {
+  //   // const binary = String.fromCharCode.apply(null, buffer);
+  //   // return window.btoa(binary);
+  //   return window.btoa(int16.reduce(
+  //     function (data, byte) {
+  //       return data + String.fromCharCode(byte);
+  //     },
+  //     ''
+  //   ));
+  // }
 }

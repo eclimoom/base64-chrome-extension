@@ -36,12 +36,20 @@
 </div>
 
 <!-- Resources -->
-<h3>Show Image</h3>
-<div class="card-container">
-  <div class="card result-image" [ngStyle]="{'background': pngConfig.background, display: 'none'}">
-    <img alt="static" *ngIf="baseString" [src]="decode()" (load)="onImageLoad()" (error)="onImageError($event)"/>
-    <span class="loading" *ngIf="loading">Image is loading, please wait...</span>
+<h3 class="sub-title">Show Image {{isDicom ? 'dicom裸数据渲染' : ''}}
+  <div class="input-wrap">
+    <span class="label">大小:</span>
+    <input class="input-number form-control"
+           [disabled]="isDicom"
+           type="number" [(ngModel)]="dicomConfig.width">
+    *
+    <input class="input-number form-control"
+           [disabled]="isDicom"
+           type="number" [(ngModel)]="dicomConfig.height">
   </div>
-  <div id="dicomImage" class="card result-image" [ngStyle]="{'background': pngConfig.background, display: 'block'}"
+</h3>
+<div class="card-container">
+  <span class="loading" *ngIf="loading">Image is loading, please wait...</span>
+  <div id="dicomImage" class="card result-image" [ngStyle]="{'background': pngConfig.background}"
   ></div>
 </div>
