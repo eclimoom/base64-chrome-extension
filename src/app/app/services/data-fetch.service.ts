@@ -416,11 +416,11 @@ export class DataFetchService {
   }
 
   // 3d裸数据模式
-  decode3dData(uint8Array: Uint8Array): any {
+  decode3dData(uint8Array: Uint8Array, dicomSize: any): any {
     let img: any;
     const defaultSize = 512;
-    const width = defaultSize;
-    const height = defaultSize;
+    const width = dicomSize.width || defaultSize;
+    const height = dicomSize.height || defaultSize;
     const pixelSpacing = { col: 0, row: 0 };
     const pixelData = new Int16Array(uint8Array.buffer);
     const windowCenter = 350;

@@ -31,9 +31,9 @@ export class BaseToPngComponent implements AfterViewInit {
   loading = false;
   isDicom = false;
 
-  dicomConfig = {
-    width: 512,
-    height: 512,
+  dicomSize = {
+    width: 369,
+    height: 494,
   };
 
   pngConfig = {
@@ -58,9 +58,6 @@ export class BaseToPngComponent implements AfterViewInit {
   constructor(private fetchService: DataFetchService) {
     this.pngConfig.imgType = this.imgTypes[0].type;
     this.pngConfig.background = this.pngConfig.backgrounds[0].color;
-
-    // todo
-    this.pngConfig.baseString = DEMO_STR1;
 
     this.list = this.getBase64List();
   }
@@ -90,6 +87,7 @@ export class BaseToPngComponent implements AfterViewInit {
     });
   }
   async renderImg(uint8Array: Uint8Array, isBase64 = false): Promise<void> {
+    this.loading = false;
     const { type, isImg } = this.fetchService.getFileType(uint8Array.slice(0, 35));
     console.log('type:', type, isImg);
     this.isDicom = false;
@@ -102,12 +100,13 @@ export class BaseToPngComponent implements AfterViewInit {
       if (isImg) {
         image = await this.fetchService.decodeImage(uint8Array, type, this.baseString);
       } else {
-        image = this.fetchService.decode3dData(uint8Array);
+        image = this.fetchService.decode3dData(uint8Array, this.dicomSize);
       }
       if (image) {
         const element = document.getElementById('dicomImage');
         try {
           cornerstone.getEnabledElement(element);
+          cornerstoneTools.clearToolState(element, 'stack');
         } catch (e) {
           cornerstone.enable(element);
           element.oncontextmenu = (e: any) => e.preventDefault();
@@ -176,8 +175,9 @@ export class BaseToPngComponent implements AfterViewInit {
 
   handleSample(): void {
     if (this.pngConfig.imgType === 'string') {
-      this.pngConfig.baseString = DEMO_STR;
-      this.baseString = DEMO_STR;
+      this.pngConfig.baseString = DEMO_STR1;
+      this.baseString = DEMO_STR1;
+      this.dicomSize.width = 45;
       this.decode();
     } else {
       this.urlPath = DEMO_PATH;
@@ -224,5 +224,9 @@ export class BaseToPngComponent implements AfterViewInit {
     } else {
       this.urlPath = '';
     }
+  }
+
+  handleDicomSizeChange(): void {
+    this.pngVal();
   }
 }
