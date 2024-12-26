@@ -76,37 +76,20 @@ headers: {
 
 
 
-本地调试和启动Chrome扩展程序项目
+## 本地调试和启动Chrome扩展程序项目
 
   - 构建项目  
     `npm run build`
   - 加载扩展程序 
-    打开 Chrome 浏览器，进入扩展程序管理页面（地址栏输入 chrome://extensions/），然后开启“开发者模式”。  
+    地址栏输入 chrome://extensions/，然后开启“开发者模式”。  
   - 加载已解压的扩展程序
     点击“加载已解压的扩展程序”按钮，然后选择 dist/base64-chrome-extension 目录。
-  - 实时开发： 如果你希望在开发过程中实时查看更改，可以使用 ng build --watch 命令来监视文件更改并自动重新构建项目。  
+  - 实时开发。  
     `npm run build -- --watch`
-  - 每次构建完成后，刷新 Chrome 扩展程序管理页面中的扩展程序以加载最新的更改。 
+  - 每次构建完成后，刷新Chrome扩展程序。 
 
 
-
-```js
-chrome.runtime.sendMessage({
-    action: 'proxyFetch',
-    url: 'http://192.168.6.35/predicts/1.2.156.600734.762202257.139620.1730459902.8499.5400253/biomind/98117e9d-a22b-11ef-a3bc-1b7ba874f173/mask/404754_13.png',
-    method: 'GET',
-    headers: {'Authorization': 'Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTczNDkzNTU1MSwiZXhwIjoxNzM1MDIxOTUxfQ.eyJ1c2VybmFtZSI6ImhlanVuamkifQ.v2201EENmdEQLRoUKvqXF7cyJx4XQZLH3tE50M9dBg1xTz03ysqP9gMrz4R9oFHhysk98Q3uVi6ozmP-HGD65A'}
-  },
-  (response) => {
-    console.log('Response Data:', response);
-    if (response?.ok) {
-      console.log('Response Data:', response.data);
-      const img = new Image();
-      img.src = URL.createObjectURL(new Blob([response.data]));
-      document.body.appendChild(img);
-    } else {
-      console.error('Error:', response.error || `Status: ${response.status}`);
-    }
-  }
-);
-```
+## 发布
+ - 打包项目  
+    `bash extension_build.sh`
+ - 上传 dist/base64-chrome-extension.zip 到 [Chrome Web Store](https://chrome.google.com/webstore/devconsole/)
