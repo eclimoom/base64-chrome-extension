@@ -26,9 +26,9 @@ export class DataFetchService {
 
   // 根绝文件流的判断文件格式
   getFileType(data: any): { type: string; isImg: boolean } {
-    console.log('getFileType>> data  >>', data);
+    // console.log('getFileType>> data  >>', data);
     const buffer = new Uint8Array(data);
-    console.log('getFileType>> buffer>>', buffer);
+    // console.log('getFileType>> buffer>>', buffer);
     let type = 'unknown';
     // 图片格式
     let isImg = false;
@@ -410,7 +410,7 @@ export class DataFetchService {
     let binaryString: string;
     try {
       binaryString = window.atob(base64);
-      console.log(binaryString, 'binaryString');
+      // console.log(binaryString, 'binaryString');
       const len = binaryString.length;
       bytes = new Uint8Array(len);
       for (let i = 0; i < len; i++) {

@@ -92,7 +92,7 @@ export class BaseToPngComponent implements AfterViewInit {
   async renderImg(uint8Array: Uint8Array, isBase64 = false): Promise<void> {
     this.loading = false;
     const { type, isImg } = this.fetchService.getFileType(uint8Array.slice(0, 35));
-    console.log('type:', type, isImg);
+    // console.log('type:', type, isImg);
     this.isDicom = false;
     if (!isImg && type === 'unknown') {
       // use 3d 裸数据
@@ -144,7 +144,7 @@ export class BaseToPngComponent implements AfterViewInit {
 
   decode(): void {
     // 1. base64 转 uint8Array
-    console.log('baseString:》》》》》》 length', this.baseString.length);
+    // console.log('baseString:》》》》》》 length', this.baseString.length);
     const { uint8Array, binaryString } = this.fetchService.base64ToArrayBuffer(this.baseString);
     this.binaryString = binaryString;
     if (uint8Array) {
