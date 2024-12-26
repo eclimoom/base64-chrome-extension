@@ -35,6 +35,11 @@
          type="text" [(ngModel)]="urlPath" (keyup)="urlVal()">
 </div>
 
+<div class="binaryString" *ngIf="binaryString">
+  <span class="binaryLabel">DecodedString:</span>
+  <span class="binaryContent">{{showAllBinaryString ? binaryString: binaryString.slice(0, 200)}}</span>
+  <button class="btn btn-small" *ngIf="binaryString.length>200" (click)="showAllBinaryString = !showAllBinaryString">{{showAllBinaryString? 'more': 'short'}}</button>
+</div>
 <!-- Resources -->
 <h3 class="sub-title">Show Image {{isDicom ? '裸数据模式' : ''}}
   <div class="input-wrap">

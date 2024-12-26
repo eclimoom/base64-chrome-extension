@@ -405,14 +405,22 @@ export class DataFetchService {
   }
 
   // base64转arrayBuffer
-  base64ToArrayBuffer(base64: string): Uint8Array {
-    const binaryString = window.atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+  base64ToArrayBuffer(base64: string): { uint8Array: Uint8Array; binaryString: string } {
+    let bytes: Uint8Array;
+    let binaryString: string;
+    try {
+      binaryString = window.atob(base64);
+      console.log(binaryString, 'binaryString');
+      const len = binaryString.length;
+      bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+    } catch (e) {
+      console.log('base64ToArrayBuffer error:', e);
+      binaryString = '解码失败：' + e;
     }
-    return bytes;
+    return { uint8Array: bytes, binaryString };
   }
 
   // 3d裸数据模式

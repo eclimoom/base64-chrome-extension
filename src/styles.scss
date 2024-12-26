@@ -70,29 +70,59 @@ p {
   flex: 1;
   overflow: auto;
 }
-.sub-title{
+
+.binaryString {
+  height: 20px;
+  width: 600px;
+  overflow: hidden;
+  display: flex;
+  font-size: 12px;
+  color: #606060;
+  text-overflow: ellipsis;
+.binaryLabel{
+  display: block;
+  margin-right: 8px;
+  font-weight: bold;
+}
+  .binaryContent{
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-small {
+    display: block;
+    width: 60px;
+    padding: 0;
+  }
+}
+
+.sub-title {
   display: flex;
   align-items: center;
 }
-.input-wrap{
+
+.input-wrap {
   display: flex;
   align-items: center;
-  .label{
+
+  .label {
     margin-left: 10px;
     font-size: 14px;
     font-weight: normal;
   }
-  .input-number{
+
+  .input-number {
     width: 50px;
   }
 }
-.size-wrap{
+
+.size-wrap {
   font-weight: normal;
   font-size: 12px;
   line-height: 1em;
   transform: scale(0.8);
 }
-
 
 
 .no-padding {

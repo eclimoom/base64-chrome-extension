@@ -52,6 +52,9 @@ export class BaseToPngComponent implements AfterViewInit {
   ];
 
   baseString: string;
+  binaryString = '';
+  // 是否显示所有的二进制字符串
+  showAllBinaryString = false;
 
   list: any[];
 
@@ -129,6 +132,7 @@ export class BaseToPngComponent implements AfterViewInit {
     // console.log("origin: ",this.pngConfig.baseString);
     let str = this.pngConfig.baseString;
     if (!str) {
+      this.binaryString = '';
       this.baseString = null;
       return;
     }
@@ -141,8 +145,11 @@ export class BaseToPngComponent implements AfterViewInit {
   decode(): void {
     // 1. base64 转 uint8Array
     console.log('baseString:》》》》》》 length', this.baseString.length);
-    const uint8Array = this.fetchService.base64ToArrayBuffer(this.baseString);
-    this.renderImg(uint8Array, true).then();
+    const { uint8Array, binaryString } = this.fetchService.base64ToArrayBuffer(this.baseString);
+    this.binaryString = binaryString;
+    if (uint8Array) {
+      this.renderImg(uint8Array, true).then();
+    }
   }
 
   setSelectionRange(): void {
