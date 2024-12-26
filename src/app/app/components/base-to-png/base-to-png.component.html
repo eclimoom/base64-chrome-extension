@@ -2,14 +2,14 @@
   <span>Decode Base64 PNG</span>
   <div class="flex-fill"></div>
   <button class="btn btn-light mr-8" type="button" (click)="handleSample()">Sample</button>
-<!--  <label for="background" class="label">背景:</label>-->
-<!--  <select-->
-<!--    name="background"-->
-<!--    id="background"-->
-<!--    class="form-control mr-8"-->
-<!--    [(ngModel)]="pngConfig.background">-->
-<!--    <option *ngFor="let bg of pngConfig.backgrounds" [value]="bg.color">{{ bg.label }}</option>-->
-<!--  </select>-->
+  <!--  <label for="background" class="label">背景:</label>-->
+  <!--  <select-->
+  <!--    name="background"-->
+  <!--    id="background"-->
+  <!--    class="form-control mr-8"-->
+  <!--    [(ngModel)]="pngConfig.background">-->
+  <!--    <option *ngFor="let bg of pngConfig.backgrounds" [value]="bg.color">{{ bg.label }}</option>-->
+  <!--  </select>-->
 
   <div class="img-type">
     <label class="custom-control-label" *ngFor="let item of imgTypes">
@@ -20,13 +20,14 @@
         (change)="handleTypeChange()"
         [(ngModel)]="pngConfig.imgType"
         [value]="item.type">
-      <span class="label-name">{{item.name}}</span>
+      <span class="label-name">{{ item.name }}</span>
     </label>
   </div>
   <button *ngIf="pngConfig.imgType=== 'url'" (click)="loadData()">load</button>
 </h2>
 
-<div *ngIf="pngConfig.imgType === 'string'" class="card no-padding" [ngClass]="{'dragTip': !this.pngConfig.baseString}" (drop)="handleDrop($event)">
+<div *ngIf="pngConfig.imgType === 'string'" class="card no-padding" [ngClass]="{'dragTip': !this.pngConfig.baseString}"
+     (drop)="handleDrop($event)">
   <textarea autofocus class="textarea" [(ngModel)]="pngConfig.baseString" (keyup)="pngVal()"></textarea>
 </div>
 <div *ngIf="pngConfig.imgType === 'url'" class="card no-padding">
@@ -36,12 +37,13 @@
 </div>
 
 <div class="binaryString" *ngIf="binaryString">
-  <span class="binaryLabel">DecodedString:</span>
-  <span class="binaryContent">{{showAllBinaryString ? binaryString: binaryString.slice(0, 200)}}</span>
-  <button class="btn btn-small" *ngIf="binaryString.length>200" (click)="showAllBinaryString = !showAllBinaryString">{{showAllBinaryString? 'more': 'short'}}</button>
+  <div class="binaryContent" [ngClass]="{'showAll': showAllBinaryString}"><span class="binaryLabel">DecodedString:</span>{{  binaryString.slice(0, showAllBinaryString? 1080: 200) }}</div>
+  <button class="btn btn-small" *ngIf="binaryString.length>200"
+          (click)="showAllBinaryString = !showAllBinaryString">{{ showAllBinaryString ? 'short' : 'more' }}
+  </button>
 </div>
 <!-- Resources -->
-<h3 class="sub-title">Show Image {{isDicom ? '裸数据模式' : ''}}
+<h3 class="sub-title">Show Image {{ isDicom ? '裸数据模式' : '' }}
   <div class="input-wrap">
     <span class="label">大小:</span>
     <input class="input-number form-control"
