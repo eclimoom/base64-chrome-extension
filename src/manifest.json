@@ -17,12 +17,12 @@
   "background": {
     "service_worker": "background.js"
   },
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "permissions": [
     "clipboardRead",
-    "declarativeNetRequest",
-    "webRequest",
-    "scripting",
-    "activeTab"
+    "declarativeNetRequest"
   ],
   "declarative_net_request": {
     "rule_resources": [

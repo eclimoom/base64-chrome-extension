@@ -78,7 +78,9 @@ export class BaseToPngComponent implements AfterViewInit {
   }
 
   loadData(): void {
-    this.getHttpData(this.urlPath);
+    const token =
+      'eyJhbGciOiJIUzUxMiIsImlhdCI6MTczNTI2MjMxMCwiZXhwIjoxNzM1MzQ4NzEwfQ.eyJ1c2VybmFtZSI6ImhlanVuamkifQ.LLgV-9OJOTr6oPJjTtXtO36EadwJbTmmsgFxw4UKvI2FlMSnUfscWJS-OUki9I38GP0mbaxTXDu434yjT-uTXA';
+    this.getHttpData(this.urlPath, token);
     // this.fetchService.getFetchData(DEMO_PATH);
   }
 
@@ -109,7 +111,6 @@ export class BaseToPngComponent implements AfterViewInit {
         const element = document.getElementById('dicomImage');
         try {
           cornerstone.getEnabledElement(element);
-          cornerstoneTools.clearToolState(element, 'stack');
         } catch (e) {
           cornerstone.enable(element);
           element.oncontextmenu = (e: any) => e.preventDefault();
@@ -122,6 +123,7 @@ export class BaseToPngComponent implements AfterViewInit {
           }
         }
         cornerstone.displayImage(element, image);
+        cornerstone.reset(element);
       }
     } else {
       console.log(`from base64: ${isBase64} ,type:【${type}】 not support!\n`, uint8Array);
@@ -138,8 +140,15 @@ export class BaseToPngComponent implements AfterViewInit {
     }
     // str 删除前后空格，删除前后引号 前后换行符
     str = str.trim().replace(/^["'\n]+|["'\n]+$/g, '');
-    this.baseString = str;
-    this.decode();
+
+    if (str.includes('http://') || str.includes('https://')) {
+      this.pngConfig.imgType = 'url';
+      this.urlPath = str;
+      this.loadData();
+    } else {
+      this.baseString = str;
+      this.decode();
+    }
   }
 
   decode(): void {
@@ -209,6 +218,7 @@ export class BaseToPngComponent implements AfterViewInit {
       this.loading = false;
       return;
     }
+    this.loadData();
   }
 
   private renderFile(file: File): void {
@@ -227,7 +237,7 @@ export class BaseToPngComponent implements AfterViewInit {
   handleTypeChange(): void {
     if (this.pngConfig.imgType === 'url') {
       this.baseString = '';
-      this.urlPath = 'http://192.168.6.35/predicts/1.2.156.600734.762202257.139620.1730459902.8499.5400253/biomind/98117e9d-a22b-11ef-a3bc-1b7ba874f173/mask/404754_13.png';
+      this.urlPath = 'http://192.168.6.35/predicts/1.2.840.40823.1.1.1.591.1538004689.481.953.614/biomind/b95bb3d3-c25b-11ef-894d-f3ef27cc8329/mask/444188_10.png';
     } else {
       this.urlPath = '';
     }

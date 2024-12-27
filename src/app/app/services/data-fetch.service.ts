@@ -5,9 +5,6 @@ import { PNG } from 'biomind-png-js';
 import * as cornerstone from 'cornerstone-core';
 import * as pako from 'pako';
 import * as fzstd from 'fzstd';
-// @ts-ignore
-import * as jpeg from 'jpeg-lossless-decoder-js';
-import { Decoder } from '../../../jpeg_decoder/decoder';
 import { getJpegInfo } from '../../../jpeg_decoder/get_jpeg_info';
 
 @Injectable({
@@ -21,7 +18,7 @@ export class DataFetchService {
       Authorization: token,
       'Content-Type': 'arrayBuffer',
     };
-    return from(fetch(url, headers).then((response) => response.arrayBuffer()));
+    return from(fetch(url, { headers }).then((response) => response.arrayBuffer()));
   }
 
   // 根绝文件流的判断文件格式

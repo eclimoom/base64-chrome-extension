@@ -37,7 +37,7 @@
 </div>
 
 <div class="binaryString" *ngIf="binaryString">
-  <div class="binaryContent" [ngClass]="{'showAll': showAllBinaryString}"><span class="binaryLabel">DecodedString:</span>{{  binaryString.slice(0, showAllBinaryString? 1080: 200) }}</div>
+  <div class="binaryContent" [title]="binaryString" [ngClass]="{'showAll': showAllBinaryString}"><span class="binaryLabel">DecodedString:</span>{{  binaryString.slice(0, showAllBinaryString? 1080: 200) }}</div>
   <button class="btn btn-small" *ngIf="binaryString.length>200"
           (click)="showAllBinaryString = !showAllBinaryString">{{ showAllBinaryString ? 'short' : 'more' }}
   </button>
