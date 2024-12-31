@@ -146,6 +146,10 @@ export class BaseToPngComponent implements AfterViewInit {
       this.urlPath = str;
       this.loadData();
     } else {
+      // 删除str的base64前缀 png、jpeg等
+      if (str.includes('base64,')) {
+        str = str.split('base64,')[1];
+      }
       this.baseString = str;
       this.decode();
     }
