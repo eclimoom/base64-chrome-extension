@@ -108,6 +108,8 @@ export class BaseToPngComponent implements AfterViewInit {
         image = this.fetchService.decode3dData(uint8Array, this.dicomSize);
       }
       if (image) {
+        this.dicomSize.width = image.width;
+        this.dicomSize.height = image.height;
         const element = document.getElementById('dicomImage');
         try {
           cornerstone.getEnabledElement(element);
