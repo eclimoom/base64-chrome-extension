@@ -1,6 +1,6 @@
 {
   "name": "Base64 to Image",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "A base64 encoder/decoder extensions for the chrome, 增加文件上传、远端文件的加载显示, 增加对字符串解码， 影像宽高调节、显示dicom base64数据、url加载显示等",
   "manifest_version": 3,
   "default_locale": "en",
