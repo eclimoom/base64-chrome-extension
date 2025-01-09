@@ -18,7 +18,20 @@ export class DataFetchService {
       Authorization: token,
       'Content-Type': 'arrayBuffer',
     };
-    return from(fetch(url, { headers }).then((response) => response.arrayBuffer()));
+
+    // 判断是否chrome extension 环境
+    // @ts-ignore
+    if (window.chrome && window.chrome.runtime) {
+      return from(fetch(url, { headers }).then((response) => response.arrayBuffer()));
+    } else {
+      // 不支持跨域
+      console.log('不支持跨域 fetch data url:', url);
+      return from(
+        new Promise((resolve, reject) => {
+          return btoa(String.fromCharCode(...new Uint8Array(new TextEncoder().encode(url))));
+        })
+      );
+    }
   }
 
   // 根绝文件流的判断文件格式
