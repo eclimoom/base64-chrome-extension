@@ -97,6 +97,7 @@ export class DataFetchService {
         }
       } else {
         png = new PNG(view);
+        console.log('png', png);
         pngPixelData = png.decodePixels();
       }
       let pixelData: any;
@@ -144,7 +145,29 @@ export class DataFetchService {
         if (type === 'jpeg') {
           pixelData = pngPixelData;
         } else {
-          pixelData = new Uint16Array(whiteBoard);
+          /**
+           * colorType（色彩类型）PNG 图片一共有 5 种色彩类型，
+           * 0 代表灰度颜色，
+           * 2 代表用 RGB 表示颜色，即 (R, G, B)，
+           * 3 代表用色板表示颜色，
+           * 4 代表灰度和透明度来表示颜色，
+           * 6 代表用 RGB 和透明度表示颜色，即 (R, G, B, A)。
+           * 色板的色彩类型里，每个像素是由 1 个色彩通道表示的
+           */
+          // now only support 2 and 0 todo: 3 4 6
+          if (png.colorType === 2) {
+            const pixels = [];
+            let index = 0;
+            for (let i = 0; i < pngPixelData.length; i += 3) {
+              pixels[index++] = pngPixelData[i];
+              pixels[index++] = pngPixelData[i + 1];
+              pixels[index++] = pngPixelData[i + 2];
+              pixels[index++] = 255; // Alpha channel
+            }
+            pixelData = pixels;
+          } else {
+            pixelData = new Uint16Array(whiteBoard);
+          }
         }
 
         image = {
@@ -174,6 +197,44 @@ export class DataFetchService {
     }
     console.log('type:', type, image);
     return image;
+  }
+
+  async decodePng24BitRgb(view: any): Promise<any> {
+    const png = new PNG(view);
+    let pixelArray = png.decodePixels();
+    const buf = new ArrayBuffer((pixelArray.length / 3) * 4); // RGB32
+    const pixels = new Uint8Array(buf); // RGB24
+    let index = 0;
+    for (let i = 0; i < pixelArray.length; i += 3) {
+      pixels[index++] = pixelArray[i];
+      pixels[index++] = pixelArray[i + 1];
+      pixels[index++] = pixelArray[i + 2];
+      pixels[index++] = 255; // Alpha channel
+    }
+    pixelArray = pixels;
+    // const { minPixelValue, maxPixelValue } = this.getPixelValues(pixelArray);
+
+    const type = 'png_24bit_rgb';
+    return {
+      imageId: type + new Date().getTime().toString().slice(-5),
+      minPixelValue: 0,
+      maxPixelValue: 255,
+      slope: 1.0,
+      intercept: 0,
+      windowCenter: 128,
+      windowWidth: 256,
+      render: cornerstone.renderColorImage,
+      getPixelData: () => pixelArray,
+      rows: png.height,
+      columns: png.width,
+      height: png.height,
+      width: png.width,
+      color: true,
+      columnPixelSpacing: 1.0,
+      rowPixelSpacing: 1.0,
+      invert: false,
+      sizeInBytes: pixelArray.length,
+    };
   }
 
   transform8Uint(oneBytePixels: any, width: number, height: number, colorDisease: any): any {
