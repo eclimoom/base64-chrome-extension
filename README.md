@@ -94,3 +94,8 @@ headers: {
  - 打包项目  
     `bash extension_build.sh`
  - 上传 dist/base64-chrome-extension.zip 到 [Chrome Web Store](https://chrome.google.com/webstore/devconsole/)
+
+
+## release note
+0.1.10 
+ - png 24 bit colorType（色彩类型）2 的支持 用 RGB 表示颜色的base64支持
