@@ -12,7 +12,6 @@ export const getJpegInfo = (base64: string) => {
       ctx.drawImage(img, 0, 0);
       const o = ctx.getImageData(0, 0, img.width, img.height);
       const pixels = new Uint8Array(o.data);
-      console.log('Image loaded', img);
       resolve({
         width,
         height,
