@@ -258,4 +258,16 @@ export class BaseToPngComponent implements AfterViewInit {
   handleDicomSizeChange(): void {
     this.pngVal();
   }
+
+  resetWWWC(): void {
+    const element = document.getElementById('dicomImage');
+    try {
+      const enabled = cornerstone.getEnabledElement(element);
+      if (enabled) {
+        cornerstone.reset(element);
+      }
+    } catch (e) {
+      console.log('resetWWWC error:');
+    }
+  }
 }

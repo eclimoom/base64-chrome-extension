@@ -57,7 +57,10 @@
            type="number" [(ngModel)]="dicomSize.height">
   </div>
   <div class="size-wrap">
-    <div class="">大小提示 标准: 512, cpr: 369, lumen: 45</div>
+    <div>大小提示 标准: 512, cpr: 369, lumen: 45</div>
+  </div>
+  <div class="tools-wrap">
+    <button class="btn btn-small" (click)="resetWWWC()">Reset</button>
   </div>
 </h3>
 <div class="card-container">
