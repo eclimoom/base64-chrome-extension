@@ -292,4 +292,17 @@ export class BaseToPngComponent implements AfterViewInit {
       console.log('resetWWWC error:');
     }
   }
+
+  handleDbClick(): void {
+    console.log('handleDbClick>>>');
+    const base64String = this.baseString;
+    if (base64String) {
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write('<img src="data:image/png;base64,' + base64String + '"  alt="base64"/>');
+      }
+    } else {
+      console.log('No Base64 string available');
+    }
+  }
 }

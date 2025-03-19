@@ -65,6 +65,6 @@
 </h3>
 <div class="card-container">
   <span class="loading" *ngIf="loading">Image is loading, please wait...</span>
-  <div id="dicomImage" class="card result-image" [ngStyle]="{'background': pngConfig.background}"
+  <div id="dicomImage" (dblclick)="handleDbClick()" class="card result-image" [ngStyle]="{'background': pngConfig.background}"
   ></div>
 </div>
