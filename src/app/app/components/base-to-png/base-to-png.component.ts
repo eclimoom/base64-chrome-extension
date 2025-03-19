@@ -89,11 +89,28 @@ export class BaseToPngComponent implements AfterViewInit {
   }
 
   getHttpData(url = '', token = ''): void {
-    this.fetchService.getFetchData(url, token).subscribe(async (res: any) => {
-      const uint8Array = new Uint8Array(res);
+    // 使用 img 加载防止跨域问题
+    const img = new Image();
+    img.src = url;
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const width = img.width;
+      const height = img.height;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0);
+      const o = ctx.getImageData(0, 0, img.width, img.height);
+      const pixels = new Uint8Array(o.data);
+      this.renderImg(pixels, true).then();
+    };
 
-      this.renderImg(uint8Array).then();
-    });
+    // this.fetchService.getFetchData(url, token).subscribe(async (res: any) => {
+    //   const uint8Array = new Uint8Array(res);
+    //
+    //   this.renderImg(uint8Array).then();
+    // });
   }
   async renderImg(uint8Array: Uint8Array, isBase64 = false): Promise<void> {
     this.loading = false;
@@ -126,7 +143,12 @@ export class BaseToPngComponent implements AfterViewInit {
             cornerstoneTools.addTool(cornerstoneTools.WwwcTool);
             cornerstoneTools.setToolActive('Wwwc', { mouseButtonMask: 1 });
 
-            cornerstoneTools.addTool(cornerstoneTools.ZoomTool);
+            cornerstoneTools.addTool(cornerstoneTools.ZoomTool, {
+              configuration: {
+                preventZoomOutsideImage: false,
+                minScale: 0.1,
+              },
+            });
             cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 2 });
           }
         }
